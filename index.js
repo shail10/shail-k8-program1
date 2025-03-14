@@ -11,7 +11,7 @@ app.use(express.json())
 STORAGE_PATH = '/shail_PV_dir'
 
 app.get('/', (req, res) => {
-  res.send('Container running')
+  res.send('Container is running successfully')
 })
 
 app.post('/store-file', (req, res) => {
@@ -40,6 +40,35 @@ app.post('/store-file', (req, res) => {
       file: file,
       error: 'Error while storing the file to the storage.',
     })
+  }
+})
+
+app.post('/calculate', async (req, res) => {
+  const { file } = req.body
+
+  console.log('Calculate api hit')
+
+  if (!file) {
+    return res.json({
+      file: null,
+      error: 'Invalid JSON input',
+    })
+  }
+
+  const filePath = path.join(STORAGE_PATH, file)
+
+  if (!fs.existsSync(filePath)) {
+    return res.json({
+      file: file,
+      error: 'File not found.',
+    })
+  }
+
+  try {
+    const response = await axios.post('http://container2-service/sum', req.body)
+    return res.json(response.data)
+  } catch (error) {
+    return res.status(500).json(error.response.data)
   }
 })
 
