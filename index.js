@@ -11,7 +11,7 @@ app.use(express.json())
 STORAGE_PATH = '/shail_PV_dir'
 
 app.get('/', (req, res) => {
-  res.send('Container is running successfully')
+  res.send('Container - 1 is running successfully')
 })
 
 app.post('/store-file', (req, res) => {
